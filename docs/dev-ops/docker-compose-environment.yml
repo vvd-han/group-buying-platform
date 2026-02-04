@@ -1,10 +1,11 @@
 # 命令执行 docker-compose -f docker-compose-environment-aliyun.yml up -d
 # docker 代理和使用文档；https://bugstack.cn/md/road-map/docker.html
-version: '3.9'
+name: group-buying-platform-dev
+
 services:
   mysql:
     image: mysql:8.0.32
-    container_name: mysql
+    container_name: group-buying-platform-mysql
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
@@ -26,12 +27,12 @@ services:
   # phpmyadmin https://hub.docker.com/_/phpmyadmin
   phpmyadmin:
     image: phpmyadmin:5.2.1
-    container_name: phpmyadmin
+    container_name: group-buying-platform-phpmyadmin
     hostname: phpmyadmin
     ports:
       - 8899:80
     environment:
-      - PMA_HOST=mysql
+      - PMA_HOST=group-buying-platform-mysql
       - PMA_PORT=3306
       - MYSQL_ROOT_PASSWORD=123456
     depends_on:
@@ -43,7 +44,7 @@ services:
   # Redis
   redis:
     image: redis:6.2
-    container_name: redis
+    container_name: group-buying-platform-redis
     restart: always
     hostname: redis
     privileged: true
@@ -63,13 +64,13 @@ services:
   # RedisAdmin https://github.com/joeferner/redis-commander
   redis-admin:
     image: spryker/redis-commander:0.8.0
-    container_name: redis-admin
+    container_name: group-buying-platform-redis-admin
     hostname: redis-commander
     restart: always
     ports:
       - 8081:8081
     environment:
-      - REDIS_HOSTS=local:redis:6379
+      - REDIS_HOSTS=local:group-buying-platform-redis:6379
       - HTTP_USER=admin
       - HTTP_PASSWORD=admin
       - LANG=C.UTF-8

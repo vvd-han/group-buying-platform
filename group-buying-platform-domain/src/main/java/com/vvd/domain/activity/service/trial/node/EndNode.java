@@ -7,7 +7,6 @@ import com.vvd.domain.activity.model.valobj.SkuVO;
 import com.vvd.domain.activity.service.trial.AbstractGroupBuyMarketSupport;
 import com.vvd.domain.activity.service.trial.factory.DefaultActivityStrategyFactory.DynamicContext;
 import com.vvd.types.design.framework.tree.StrategyHandle;
-import java.math.BigDecimal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +32,7 @@ public class EndNode extends
             .goodsId(skuVO.getGoodsId())
             .goodsName(skuVO.getGoodsName())
             .originalPrice(skuVO.getOriginalPrice())
-            .deductionPrice(new BigDecimal("0.00"))
+            .deductionPrice(dynamicContext.getDeductionPrice())
             .targetCount(groupBuyActivityDiscountVO.getTarget())
             .startTime(groupBuyActivityDiscountVO.getStartTime())
             .endTime(groupBuyActivityDiscountVO.getEndTime())

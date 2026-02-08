@@ -6,6 +6,7 @@ import com.vvd.domain.activity.model.valobj.GroupBuyActivityDiscountVO;
 import com.vvd.domain.activity.model.valobj.SkuVO;
 import com.vvd.domain.activity.service.trial.node.RootNode;
 import com.vvd.types.design.framework.tree.StrategyHandle;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,8 +39,14 @@ public class DefaultActivityStrategyFactory {
     @NoArgsConstructor
     public static class DynamicContext {
         
+        /** 团购活动折扣信息对象 */
         private GroupBuyActivityDiscountVO groupBuyActivityDiscountVO;
+        
+        /** SKU商品信息对象 */
         private SkuVO skuVO;
+        
+        /** 计算后的折扣价格 */
+        private BigDecimal deductionPrice;
         
     }
     

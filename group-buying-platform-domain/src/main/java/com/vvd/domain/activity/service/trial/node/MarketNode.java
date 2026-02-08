@@ -3,12 +3,18 @@ package com.vvd.domain.activity.service.trial.node;
 import com.vvd.domain.activity.model.entity.MarketProductEntity;
 import com.vvd.domain.activity.model.entity.TrialBalanceEntity;
 import com.vvd.domain.activity.model.valobj.GroupBuyActivityDiscountVO;
+import com.vvd.domain.activity.model.valobj.GroupBuyActivityDiscountVO.GroupBuyDiscount;
 import com.vvd.domain.activity.model.valobj.SkuVO;
+import com.vvd.domain.activity.service.discount.IDiscountCalculateService;
 import com.vvd.domain.activity.service.trial.AbstractGroupBuyMarketSupport;
 import com.vvd.domain.activity.service.trial.factory.DefaultActivityStrategyFactory.DynamicContext;
 import com.vvd.domain.activity.service.trial.thread.QueryGroupBuyActivityDiscountVOThreadTask;
 import com.vvd.domain.activity.service.trial.thread.QuerySkuVOFromDBThreadTask;
 import com.vvd.types.design.framework.tree.StrategyHandle;
+import com.vvd.types.enums.ResponseCode;
+import com.vvd.types.exception.AppException;
+import java.math.BigDecimal;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -32,6 +38,9 @@ public class MarketNode extends AbstractGroupBuyMarketSupport<MarketProductEntit
     
     @Resource
     private EndNode endNode;
+    
+    @Resource
+    private Map<String, IDiscountCalculateService> discountCalculateServiceMap;
     
     @Override
     protected void multiThread(MarketProductEntity requestParameter, DynamicContext dynamicContext)
@@ -61,6 +70,23 @@ public class MarketNode extends AbstractGroupBuyMarketSupport<MarketProductEntit
     @Override
     public TrialBalanceEntity doApply(MarketProductEntity requestParameter,
         DynamicContext dynamicContext) throws Exception {
+        
+        GroupBuyActivityDiscountVO groupBuyActivityDiscountVO = dynamicContext.getGroupBuyActivityDiscountVO();
+        GroupBuyDiscount groupBuyDiscount = groupBuyActivityDiscountVO.getGroupBuyDiscount();
+        SkuVO skuVO = dynamicContext.getSkuVO();
+        
+        IDiscountCalculateService discountCalculateService = discountCalculateServiceMap.get(
+            groupBuyDiscount.getMarketPlan());
+        
+        if (null == discountCalculateService) {
+            throw new AppException(ResponseCode.E0001.getInfo());
+        }
+        
+        BigDecimal deductionPrice = discountCalculateService.calculate(requestParameter.getUserId(),
+            skuVO.getOriginalPrice(), groupBuyDiscount);
+        
+        dynamicContext.setDeductionPrice(deductionPrice);
+        
         return router(requestParameter, dynamicContext);
     }
     

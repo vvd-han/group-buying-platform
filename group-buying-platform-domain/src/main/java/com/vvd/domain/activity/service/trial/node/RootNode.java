@@ -1,12 +1,16 @@
 package com.vvd.domain.activity.service.trial.node;
 
+import com.alibaba.fastjson.JSON;
 import com.vvd.domain.activity.model.entity.MarketProductEntity;
 import com.vvd.domain.activity.model.entity.TrialBalanceEntity;
 import com.vvd.domain.activity.service.trial.AbstractGroupBuyMarketSupport;
 import com.vvd.domain.activity.service.trial.factory.DefaultActivityStrategyFactory.DynamicContext;
 import com.vvd.types.design.framework.tree.StrategyHandle;
+import com.vvd.types.enums.ResponseCode;
+import com.vvd.types.exception.AppException;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,18 +20,25 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class RootNode extends
-    AbstractGroupBuyMarketSupport<MarketProductEntity, DynamicContext, TrialBalanceEntity> {
+public class RootNode extends AbstractGroupBuyMarketSupport<MarketProductEntity, DynamicContext, TrialBalanceEntity> {
 
     @Resource
     private SwitchRoot switchRoot;
 
     @Override
-    public TrialBalanceEntity apply(MarketProductEntity requestParameter,
-        DynamicContext dynamicContext) throws Exception {
+    public TrialBalanceEntity doApply(MarketProductEntity requestParameter, DynamicContext dynamicContext)
+        throws Exception {
+        log.info("拼团商品查询试算服务-RootNode userId:{} requestParameter:{}", requestParameter.getUserId(),
+            JSON.toJSONString(requestParameter));
+        if (StringUtils.isBlank(requestParameter.getUserId()) ||
+            StringUtils.isBlank(requestParameter.getGoodsId()) ||
+            StringUtils.isBlank(requestParameter.getSource()) ||
+            StringUtils.isBlank(requestParameter.getChannel())
+        ) {
+            throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(), ResponseCode.ILLEGAL_PARAMETER.getInfo());
+        }
 
-//        dynamicContext
-        return null;
+        return router(requestParameter, dynamicContext);
     }
 
     @Override

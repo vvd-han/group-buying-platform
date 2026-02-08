@@ -5,6 +5,7 @@ import com.vvd.domain.activity.model.entity.TrialBalanceEntity;
 import com.vvd.domain.activity.service.trial.AbstractGroupBuyMarketSupport;
 import com.vvd.domain.activity.service.trial.factory.DefaultActivityStrategyFactory.DynamicContext;
 import com.vvd.types.design.framework.tree.StrategyHandle;
+import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -17,17 +18,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class SwitchRoot extends
     AbstractGroupBuyMarketSupport<MarketProductEntity, DynamicContext, TrialBalanceEntity> {
-
+    
+    @Resource
+    private MarketNode marketNode;
+    
     @Override
-    public TrialBalanceEntity apply(MarketProductEntity requestParameter,
+    public TrialBalanceEntity doApply(MarketProductEntity requestParameter,
         DynamicContext dynamicContext) throws Exception {
-        return null;
+        return router(requestParameter, dynamicContext);
     }
-
+    
     @Override
     public StrategyHandle<MarketProductEntity, DynamicContext, TrialBalanceEntity> get(
         MarketProductEntity requestParameter, DynamicContext dynamicContext) throws Exception {
-        return null;
+        return marketNode;
     }
-
+    
 }

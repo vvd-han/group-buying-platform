@@ -6,12 +6,14 @@ import com.vvd.domain.activity.service.trial.factory.DefaultActivityStrategyFact
 import com.vvd.domain.activity.service.trial.factory.DefaultActivityStrategyFactory.DynamicContext;
 import com.vvd.types.design.framework.tree.StrategyHandle;
 import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
 
 /**
  * @author vvd
  * @description
  * @create 2026-02-05 16:57
  */
+@Service
 public class IndexGroupBuyMarketServiceImpl implements IIndexGroupBuyMarketService {
 
     @Resource

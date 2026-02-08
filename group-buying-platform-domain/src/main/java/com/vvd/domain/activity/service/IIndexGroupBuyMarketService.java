@@ -9,7 +9,7 @@ import com.vvd.domain.activity.model.entity.TrialBalanceEntity;
  * @create 2026-02-05 16:56
  */
 public interface IIndexGroupBuyMarketService {
-
+    
     TrialBalanceEntity indexMarketTrial(MarketProductEntity marketProductEntity) throws Exception;
-
+    
 }

@@ -1,9 +1,8 @@
 package com.vvd.infrastructure.dao;
 
 import com.vvd.infrastructure.dao.po.GroupBuyActivity;
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * @author vvd
@@ -14,5 +13,7 @@ import java.util.List;
 public interface IGroupBuyActivityDao {
 
     List<GroupBuyActivity> queryGroupBuyActivityList();
+
+    GroupBuyActivity queryValidGroupBuyActivity(GroupBuyActivity groupBuyActivityReq);
 
 }

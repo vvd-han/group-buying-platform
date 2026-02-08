@@ -6,9 +6,9 @@ import lombok.Setter;
 /**
  * @author vvd
  * @description
- * @create 2026-02-05 11:59
+ * @create 2026-02-05 22:34
  */
-public abstract class AbstractStrategyRouter<T, D, R> implements StrategyMapper<T, D, R>,
+public abstract class AbstractMultiThreadStrategyRouter<T, D, R> implements StrategyMapper<T, D, R>,
     StrategyHandle<T, D, R> {
 
     @Getter
@@ -22,5 +22,15 @@ public abstract class AbstractStrategyRouter<T, D, R> implements StrategyMapper<
         }
         return defaultStrategyHandle.apply(requestParameter, dynamicContext);
     }
+
+    @Override
+    public R apply(T requestParameter, D dynamicContext) throws Exception {
+        multiThread(requestParameter, dynamicContext);
+        return doApply(requestParameter, dynamicContext);
+    }
+
+    protected abstract R doApply(T requestParameter, D dynamicContext) throws Exception;
+
+    protected abstract void multiThread(T requestParameter, D dynamicContext) throws Exception;
 
 }
